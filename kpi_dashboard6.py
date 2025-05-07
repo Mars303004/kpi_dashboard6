@@ -47,7 +47,7 @@ selected_status = st.selectbox("📌 Pilih warna status:", status_options, index
 
 # ========== LOAD DATA ==========
 excel_file = "Coba excel.xlsx"
-df = pd.read_excel(excel_file, sheet_name="Dulu")
+df = pd.read_excel(excel_file, sheet_name="Coba excel")
 
 # Mapping warna
 status_mapping = {
