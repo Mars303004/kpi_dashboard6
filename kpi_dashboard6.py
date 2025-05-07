@@ -35,19 +35,44 @@ st.markdown("""
             border-left: 5px solid #0f098e;
             margin-bottom: 1rem;
         }
+        .button-box {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        .button-box div {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #0f098e;
+            color: white;
+            font-size: 18px;
+            padding: 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            text-align: center;
+        }
+        .button-box div:hover {
+            background-color: #b42020;
+        }
     </style>
 """, unsafe_allow_html=True)
 
 st.title("📈 KPI Dashboard")
 
 # ========== UI FILTER ==========
-selected_perspectives = st.multiselect("🎯 Pilih Perspective:", ["FIN", "CM", "IP", "LG"], default=["IP"])
-status_options = ["🔴 Merah", "🟡 Kuning", "🟢 Hijau", "⚫ Hitam"]
-selected_status = st.selectbox("📌 Pilih warna status:", status_options, index=0)
+# Dropdown as button-like grid
+perspective_options = ["FIN", "CM", "IP", "LG"]
+st.markdown("### 🎯 Pilih Perspective:")
+col1, col2 = st.columns([1, 1])
+
+with col1:
+    selected_perspective = st.selectbox("Pilih Perspective", perspective_options, index=2)
 
 # ========== LOAD DATA ==========
-excel_file = "Coba excel.xlsx"
-df = pd.read_excel(excel_file, sheet_name="Coba excel")
+excel_file = "Coba excel.xlsx"  # Pastikan path file yang benar
+df = pd.read_excel(excel_file, sheet_name="Coba excel")  # Perbaiki nama sheet
 
 # Mapping warna
 status_mapping = {
@@ -58,8 +83,7 @@ status_mapping = {
 }
 
 # ========== FILTER DATA ==========
-filtered_df = df[df['Perspective'].isin(selected_perspectives)]
-filtered_df = filtered_df[filtered_df['Traffic Light'] == selected_status.split()[1]]
+filtered_df = df[df['Perspective'] == selected_perspective]
 
 # ========== KPI SUMMARY ==========
 st.subheader("📊 KPI Summary")
@@ -78,7 +102,7 @@ with st.container():
         st.dataframe(best[["KPI", "%Achv"]], use_container_width=True)
 
 # ========== KPI DETAILS ==========
-st.subheader(f"📋 Daftar KPI dengan Status {selected_status}")
+st.subheader(f"📋 Daftar KPI untuk Perspective {selected_perspective}")
 
 for i, row in filtered_df.iterrows():
     with st.container():
